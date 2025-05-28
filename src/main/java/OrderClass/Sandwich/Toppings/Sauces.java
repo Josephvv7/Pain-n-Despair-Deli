@@ -14,4 +14,9 @@ public class Sauces extends ToppingsA {
     public String getType() {
         return "Sauce";
     }
+
+    public static String[] getAvailableSauces() {
+        return new String[] { "Mayo", "Mustard", "Oil", "Vinegar", "Ranch", "Chipotle Southwest" };
+    }
+
 }
