@@ -20,6 +20,10 @@ public class Sandwich {
         this.toppings = new ArrayList<>();
     }
 
+    public List<ToppingsA> getToppings() {
+        return toppings;
+    }
+
     public void addTopping(ToppingsA topping) {
         toppings.add(topping);
     }
@@ -59,7 +63,28 @@ public class Sandwich {
     }
 
     public String getReceiptLine() {
-        return null;
+        StringBuilder receipt = new StringBuilder();
+
+        receipt.append(size).append("\" ").append(breadType);
+        if (isToasted()) {
+            receipt.append(" (Toasted)");
+        }
+        receipt.append("\n");
+
+        for (ToppingsA topping : toppings) {
+            receipt.append("  - ").append(topping.getName()).append("\n");
+        }
+
+        if (extraMeat) {
+            receipt.append(" + Extra Meat\n");
+        }
+        if (extraCheese) {
+            receipt.append(" + Extra Cheese\n");
+        }
+
+        receipt.append(" Sandwich Total: $").append(String.format("%.2f", calculatePrice())).append("\n");
+
+        return receipt.toString();
     }
 
 
