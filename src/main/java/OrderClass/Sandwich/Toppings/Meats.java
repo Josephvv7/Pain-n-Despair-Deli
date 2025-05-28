@@ -19,4 +19,9 @@ public class Meats extends ToppingsA {
     public String getType() {
         return "Premium";
     }
+
+    public static String[] getAvailableMeats() {
+        return new String[] { "Steak", "Ham", "Salami", "Roast Beef", "Chicken", "Bacon" };
+    }
+
 }
