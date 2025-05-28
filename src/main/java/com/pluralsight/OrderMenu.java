@@ -6,9 +6,11 @@ import OrderClass.Order;
 import OrderClass.Sandwich.Sandwich;
 import OrderClass.Sandwich.Toppings.Meats;
 import OrderClass.Sandwich.Toppings.RegularTopping;
+import OrderFileManager.OrderFileManager;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.Scanner;
 
 public class OrderMenu {
@@ -41,10 +43,10 @@ public class OrderMenu {
             boolean startOrder = true;
             while (startOrder) {
                 System.out.println("\n===== Order Menu =====");
-                System.out.println("1: Add a Sandwich (bozo lol)");
+                System.out.println("1: Add a Sandwich (Bozo lol)");
                 System.out.println("2: Add a Drink (Thirsty huh?)");
                 System.out.println("3: Add Chips (We do NOT need the chips ma boy)");
-                System.out.println("4: Let us Checkout so you can leave faster!");
+                System.out.println("4: Let us Checkout (So you can leave faster!)");
                 System.out.println("0: Cancel Order (Save us both the time!)");
                 System.out.print("Select what you want to do (And lets make it snappy)");
 
@@ -95,6 +97,7 @@ public class OrderMenu {
         public void pickToppings (Sandwich sandwich, int size) {
             System.out.println("\n--- Premium Toppings ---");
             System.out.print("Add meat? (Yes or No): ");
+
             if (getStringInput().equalsIgnoreCase("Yes")) {
                 System.out.print("Meat type: \nSteak \nHam \nSalami \nRoast Beef \nChicken \nBacon");
                 String meat = getStringInput();
@@ -105,7 +108,8 @@ public class OrderMenu {
             }
 
             System.out.println("\n--- The Other Free Stuff (Where you should be looking)");
-            System.out.println("Press 'x' when youre done being so picky");
+            System.out.println("Press 'x' when you're done being so picky");
+
             while (true) {
                 System.out.println("Add toppings/sauces: ");
                 String topping = getStringInput();
@@ -143,15 +147,14 @@ public class OrderMenu {
             System.out.println("0: Cancel (Wasted all that time...Lovely...");
 
             if (getInput() == 1) {
-                saveReceipt();
+                OrderFileManager fileManager = new OrderFileManager();
+                fileManager.saveReceipt(currentOrder);
+
                 currentOrder = null;
                 System.out.println("Order complete! We followed the prompts and you lost money! Enjoy your meal!");
                 return true;
             }
             return false;
-        }
-
-        public void saveReceipt () {
         }
 
         public int getInput () {
