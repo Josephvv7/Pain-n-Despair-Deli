@@ -84,15 +84,16 @@ public class OrderMenu {
             System.out.print("Size (we have 4, 8, or 12 inches): \n");
             int size = getInput();
 
+            Sandwich sandwich = new Sandwich(size, bread);
             System.out.print("Toast the sandwich? (Yes or No?)");
-            boolean toasted = getStringInput().equalsIgnoreCase("Yes");
+            sandwich.setToasted(getStringInput().equalsIgnoreCase("Yes"));
 
-            Sandwich sandwich = new Sandwich(size, bread, toasted);
             pickToppings(sandwich, size);
 
             currentOrder.addSandwich(sandwich);
+
             System.out.println("Yay...sandwich added to order...(You get to pay soon congrats!)");
-        }
+    }
 
         public void pickToppings (Sandwich sandwich, int size) {
             System.out.println("\n--- Premium Toppings ---");
