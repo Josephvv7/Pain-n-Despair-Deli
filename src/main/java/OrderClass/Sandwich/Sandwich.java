@@ -63,4 +63,11 @@ public class Sandwich {
     }
 
 
+    public void setToasted(boolean toasted) {
+        this.toasted = toasted;
+    }
+
+    public boolean isToasted() {
+        return toasted;
+    }
 }
