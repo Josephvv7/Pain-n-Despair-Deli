@@ -1,11 +1,21 @@
 package OrderClass;
 
 public class Chips {
-    public String getReceiptLine() {
-        return "Chips:";
+    private String brand;
+
+    public Chips(String brand) {
+        this.brand = brand;
+    }
+
+    public String getBrand() {
+        return brand;
     }
 
     public double getPrice() {
-        return 0.00;
+        return 1.50;
+    }
+
+    public String getReceiptLine() {
+        return String.format("Chips: %s - $%.2f", brand, getPrice());
     }
 }
