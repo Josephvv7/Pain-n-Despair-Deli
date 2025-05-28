@@ -5,7 +5,7 @@ public class Cheese extends ToppingsA {
 
     public Cheese(String name, int size) {
         super(name);
-        this.size =size;
+        this.size = size;
     }
 
     @Override
