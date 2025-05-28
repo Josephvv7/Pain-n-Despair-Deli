@@ -19,4 +19,9 @@ public class Cheese extends ToppingsA {
     public String getType() {
         return "Premium";
     }
+
+    public static String[] getAvailableCheese() {
+        return new String[] { "American", "Provolone", "Cheddar", "Swiss" };
+    }
+
 }
