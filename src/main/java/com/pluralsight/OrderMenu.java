@@ -21,9 +21,9 @@ public class OrderMenu {
         boolean running = true;
         while (running) {
             System.out.println("\n===== Welcome to Pain 'n' Despair Deli or whatever =====");
-            System.out.println("Select whatever you want to do...");
-            System.out.println("1: Start New Order (yay...)");
-            System.out.println("0: Exit Menu (Please...)");
+            System.out.println("--- Select whatever you want to do... ---");
+            System.out.println("   Start New Order (yay...)\n1: ");
+            System.out.println("   Exit Menu (Please...)\n0: ");
             System.out.print("Your choice: ");
 
             switch (getInput()) {
@@ -48,7 +48,7 @@ public class OrderMenu {
                 System.out.println("3: Add Chips (We do NOT need the chips ma boy)");
                 System.out.println("4: Let us Checkout (So you can leave faster!)");
                 System.out.println("0: Cancel Order (Save us both the time!)");
-                System.out.print("Select what you want to do (And lets make it snappy)");
+                System.out.print("Select what you want to do (And lets make it snappy)\n ");
 
                 switch (getInput()) {
                     case 1 -> buildSandwich();
@@ -81,17 +81,17 @@ public class OrderMenu {
                 }
             };
 
-            System.out.print("Size (we have 4, 8, or 12 inches): ");
+            System.out.print("Size (we have 4, 8, or 12 inches): \n");
             int size = getInput();
 
-            System.out.print("Toast the sandwich? (Yes or No?");
+            System.out.print("Toast the sandwich? (Yes or No?)");
             boolean toasted = getStringInput().equalsIgnoreCase("Yes");
 
             Sandwich sandwich = new Sandwich(size, bread, toasted);
             pickToppings(sandwich, size);
 
             currentOrder.addSandwich(sandwich);
-            System.out.println("Yay...sandwich added to order...(You get to pay soon congrats!");
+            System.out.println("Yay...sandwich added to order...(You get to pay soon congrats!)");
         }
 
         public void pickToppings (Sandwich sandwich, int size) {
@@ -107,7 +107,7 @@ public class OrderMenu {
                 sandwich.setExtraMeat(getStringInput().equalsIgnoreCase("Yes"));
             }
 
-            System.out.println("\n--- The Other Free Stuff (Where you should be looking)");
+            System.out.println("\n--- The Free Stuff (Where you should be looking)");
             System.out.println("Press 'x' when you're done being so picky");
 
             while (true) {
