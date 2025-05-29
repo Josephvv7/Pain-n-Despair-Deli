@@ -11,19 +11,32 @@ import OrderFileManager.OrderFileManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class OrderMenu {
     public Order currentOrder;
     private final Scanner scanner = new Scanner(System.in);
 
+    public int getInput () {
+        while (!scanner.hasNextInt()) {
+            scanner.next();
+        }
+        int input = scanner.nextInt();
+        scanner.nextLine();
+        return input;
+    }
+
+    public String getStringInput () {
+        return scanner.nextLine().trim();
+    }
+
     public void display() {
         boolean running = true;
         while (running) {
             System.out.println("\n===== Welcome to Pain 'n' Despair Deli or whatever =====");
-            System.out.println("--- Select whatever you want to do... ---");
-            System.out.println("   Start New Order (yay...)\n1: ");
-            System.out.println("   Exit Menu (Please...)\n0: ");
+            System.out.println("\n--- Select whatever you want to do ---");
+            System.out.println("\n1: Start New Order (yay...)");
+            System.out.println("2: Exit Menu (Please...)\n");
             System.out.print("Your choice: ");
 
             switch (getInput()) {
@@ -48,7 +61,7 @@ public class OrderMenu {
                 System.out.println("3: Add Chips (We do NOT need the chips ma boy)");
                 System.out.println("4: Let us Checkout (So you can leave faster!)");
                 System.out.println("0: Cancel Order (Save us both the time!)");
-                System.out.print("Select what you want to do (And lets make it snappy)\n ");
+                System.out.print("\nSelect what you want to do (And lets make it snappy): ");
 
                 switch (getInput()) {
                     case 1 -> buildSandwich();
@@ -76,17 +89,18 @@ public class OrderMenu {
                 case 3 -> "Rye";
                 case 4 -> "Wrap";
                 default -> {
-                    System.out.println("So I am picking? White it is, less time spent on earth, perfect for the both of us!");
+                    System.out.println("So I am picking? White bread it is, less time spent on earth, perfect for the both of us!");
                     yield "White";
                 }
             };
 
-            System.out.print("Size (we have 4, 8, or 12 inches): \n");
+            System.out.print("\nSize Selection (we have 4, 8, or 12 inches): ");
             int size = getInput();
 
             Sandwich sandwich = new Sandwich(size, bread);
-            System.out.print("Toast the sandwich? (Yes or No?)");
+            System.out.print("\nToast the sandwich? (Yes or No?): ");
             sandwich.setToasted(getStringInput().equalsIgnoreCase("Yes"));
+            System.out.println("Sandwich will be toasted");
 
             pickToppings(sandwich, size);
 
@@ -98,14 +112,62 @@ public class OrderMenu {
         public void pickToppings (Sandwich sandwich, int size) {
             System.out.println("\n--- Premium Toppings ---");
             System.out.print("Add meat? (Yes or No): ");
-
             if (getStringInput().equalsIgnoreCase("Yes")) {
-                System.out.print("Meat type: \nSteak \nHam \nSalami \nRoast Beef \nChicken \nBacon");
-                String meat = getStringInput();
-                sandwich.addTopping(new Meats(meat, size));
 
-                System.out.print("Extra meat? (It costs more, good for me, not so much for you...Thanks in advanced!): ");
-                sandwich.setExtraMeat(getStringInput().equalsIgnoreCase("Yes"));
+                String[] meats = Meats.getAvailableMeats();
+                Map<String, Integer> initialMeats = new HashMap<>();
+
+                int meatAmount = 0;
+                while (meatAmount < 10) {
+                    System.out.println("\nChoose what meat to add...You get to go crazy! (Up to 10, I am not made of money!)\n Select 0 to stop: ");
+                    for (int i = 0; i < meats.length; i++) {
+                        System.out.printf("%d. %s (%d selected)\n", i + 1, meats[i], initialMeats.getOrDefault(meats[i], 0));
+                    }
+
+                    int choice = getInput();
+                    if (choice == 0) break;
+
+                    if (choice >= 1 && choice <= meats.length) {
+                        String selected = meats[choice - 1];
+                        sandwich.addTopping(new Meats(selected, size));
+                        initialMeats.put(selected, initialMeats.getOrDefault(selected, 0) + 1);
+                        meatAmount++;
+                        System.out.println(selected + " added.");
+                    } else {
+                        System.out.println("ERR can't let you do that!");
+                    }
+                }
+
+                System.out.print("\nExtra meat? (It costs more, good for me, not so much for you...Thanks in advanced!): ");
+                if (getStringInput().equalsIgnoreCase("Yes")) {
+                    Map<String, Integer> meatAmountExtra = new HashMap<>();
+
+                    while (true) {
+                        System.out.println("\nChoose the extra meat you want (Like you need more...)\nFor legal reasons I have to tell you only up to 2 per type, although I would not try to stop you personally.\nPress 0 when satisfied: ");
+                        for (int i = 0; i < meats.length; i++) {
+                            String meat = meats[i];
+                            System.out.printf("%d. %s (%d/2 extra)\n", i + 1, meat, meatAmountExtra.getOrDefault(meat, 0));
+                        }
+                        int choice = getInput();
+                        if (choice == 0) break;
+
+                        if (choice >= 1 && choice <+ meats.length) {
+                            String selected = meats[choice - 1];
+                            int currentCount = meatAmountExtra.getOrDefault(selected, 0);
+
+                            if (currentCount >= 2) {
+                                System.out.println("You already chose 2 of that, on top of what you have! This is the greed they spoke about in the Bible!" + selected);
+                                continue;
+                            }
+
+                            sandwich.addTopping(new Meats(selected, size));
+                            meatAmountExtra.put(selected, currentCount + 1);
+                            System.out.println("Extra " + selected + " added.");
+                        } else {
+                            System.out.println("And I am back to saying you did something wrong, surprised? No.");
+                        }
+                    }
+                }
             }
 
             System.out.println("\n--- The Free Stuff (Where you should be looking)");
@@ -156,19 +218,6 @@ public class OrderMenu {
                 return true;
             }
             return false;
-        }
-
-        public int getInput () {
-            while (!scanner.hasNextInt()) {
-                scanner.next();
-            }
-            int input = scanner.nextInt();
-            scanner.nextLine();
-            return input;
-        }
-
-        public String getStringInput () {
-            return scanner.nextLine().trim();
         }
     }
 
