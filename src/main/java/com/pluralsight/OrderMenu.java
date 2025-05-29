@@ -4,12 +4,10 @@ import OrderClass.Chips;
 import OrderClass.Drinks;
 import OrderClass.Order;
 import OrderClass.Sandwich.Sandwich;
+import OrderClass.Sandwich.Toppings.Cheese;
 import OrderClass.Sandwich.Toppings.Meats;
 import OrderClass.Sandwich.Toppings.RegularTopping;
 import OrderFileManager.OrderFileManager;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import java.util.*;
 
@@ -98,8 +96,8 @@ public class OrderMenu {
             int size = getInput();
 
             Sandwich sandwich = new Sandwich(size, bread);
-            System.out.print("\nToast the sandwich? (Yes or No?): ");
-            sandwich.setToasted(getStringInput().equalsIgnoreCase("Yes"));
+            System.out.print("\nToast the sandwich? (Y/N?): ");
+            sandwich.setToasted(getStringInput().equalsIgnoreCase("Y"));
             System.out.println("Sandwich will be toasted");
 
             pickToppings(sandwich, size);
@@ -111,53 +109,65 @@ public class OrderMenu {
 
         public void pickToppings (Sandwich sandwich, int size) {
             System.out.println("\n--- Premium Toppings ---");
-            System.out.print("Add meat? (Yes or No): ");
-            if (getStringInput().equalsIgnoreCase("Yes")) {
+            System.out.print("Add meat? (Y/N): ");
+            if (getStringInput().equalsIgnoreCase("Y")) {
 
                 String[] meats = Meats.getAvailableMeats();
                 Map<String, Integer> initialMeats = new HashMap<>();
-
                 int meatAmount = 0;
-                while (meatAmount < 10) {
-                    System.out.println("\nChoose what meat to add...You get to go crazy! (Up to 10, I am not made of money!)\n Select 0 to stop: ");
-                    for (int i = 0; i < meats.length; i++) {
-                        System.out.printf("%d. %s (%d selected)\n", i + 1, meats[i], initialMeats.getOrDefault(meats[i], 0));
-                    }
 
+                System.out.println("\nChoose what meat to add...You get to go crazy! (Up to 10, I am not made of money!)\n Select 0 to stop: ");
+                for (int i = 0; i < meats.length; i++) {
+                    System.out.printf("%d. %s\n", i + 1, meats[i]);
+                }
+
+                while (meatAmount < 10) {
+                    System.out.printf("You have selected %d/10. Keep selecting or press 0 to finish: ", meatAmount);
                     int choice = getInput();
+
                     if (choice == 0) break;
 
                     if (choice >= 1 && choice <= meats.length) {
-                        String selected = meats[choice - 1];
-                        sandwich.addTopping(new Meats(selected, size));
-                        initialMeats.put(selected, initialMeats.getOrDefault(selected, 0) + 1);
-                        meatAmount++;
-                        System.out.println(selected + " added.");
+                    String selected = meats[choice - 1];
+                    sandwich.addTopping(new Meats(selected, size));
+                    initialMeats.put(selected, initialMeats.getOrDefault(selected, 0) + 1);
+                    meatAmount++;
+                    System.out.println(selected + " added.");
+
                     } else {
-                        System.out.println("ERR can't let you do that!");
+                        System.out.println("ERR can't let you do that! Enter 1 to " + meats.length + " or 0 to stop.");
                     }
                 }
 
-                System.out.print("\nExtra meat? (It costs more, good for me, not so much for you...Thanks in advanced!): ");
-                if (getStringInput().equalsIgnoreCase("Yes")) {
+                if (!initialMeats.isEmpty()) {
+                    System.out.println("\nYou have selected:");
+                    for (Map.Entry<String, Integer> entry : initialMeats.entrySet()) {
+                        System.out.printf(" - %s x%d\n", entry.getKey(), entry.getValue());
+                    }
+                }
+
+                System.out.print("\nExtra meat? (It costs more, good for me, not so much for you...Thanks in advanced!)\nY/N: ");
+                if (getStringInput().equalsIgnoreCase("Y")) {
                     Map<String, Integer> meatAmountExtra = new HashMap<>();
 
-                    while (true) {
+
                         System.out.println("\nChoose the extra meat you want (Like you need more...)\nFor legal reasons I have to tell you only up to 2 per type, although I would not try to stop you personally.\nPress 0 when satisfied: ");
                         for (int i = 0; i < meats.length; i++) {
-                            String meat = meats[i];
-                            System.out.printf("%d. %s (%d/2 extra)\n", i + 1, meat, meatAmountExtra.getOrDefault(meat, 0));
+                            System.out.printf("%d. %s\n", i + 1, meats[i]);
                         }
-                        int choice = getInput();
-                        if (choice == 0) break;
 
-                        if (choice >= 1 && choice <+ meats.length) {
-                            String selected = meats[choice - 1];
-                            int currentCount = meatAmountExtra.getOrDefault(selected, 0);
+                        while (true) {
+                            System.out.print("Extra meat selection (0 to stop): ");
+                            int choice = getInput();
+                            if (choice == 0) break;
 
-                            if (currentCount >= 2) {
-                                System.out.println("You already chose 2 of that, on top of what you have! This is the greed they spoke about in the Bible!" + selected);
-                                continue;
+                            if (choice >= 1 && choice <= meats.length) {
+                                String selected = meats[choice - 1];
+                                int currentCount = meatAmountExtra.getOrDefault(selected, 0);
+
+                                if (currentCount >= 2) {
+                                    System.out.println("You already chose 2 of " + selected + "\nThis is the greed they spoke about in the Bible!");
+                                    continue;
                             }
 
                             sandwich.addTopping(new Meats(selected, size));
@@ -167,8 +177,91 @@ public class OrderMenu {
                             System.out.println("And I am back to saying you did something wrong, surprised? No.");
                         }
                     }
+                        if (!meatAmountExtra.isEmpty()) {
+                            System.out.printf("\nYou added extra:");
+                            for (Map.Entry<String, Integer> entry : meatAmountExtra.entrySet()) {
+                                System.out.printf(" - %s x%d (extra)\n", entry.getKey(), entry.getValue());
+                            }
+                        }
                 }
             }
+
+            System.out.println("\n--- Cheese Selection ---");
+            System.out.print("Add cheese? (Y/N): ");
+            if (getStringInput().equalsIgnoreCase("Y")) {
+
+                String[] cheeses = Cheese.getAvailableCheese();
+                Map<String, Integer> initialCheeses = new HashMap<>();
+
+                System.out.println("\nChoose what cheese to add...You get to go crazy! (Up to 10, I am not made of money!)\n Select 0 to stop: ");
+                for (int i = 0; i < cheeses.length; i++) {
+                    System.out.printf("%d. %s\n", i + 1, cheeses[i]);
+                }
+
+                while (true) {
+                    System.out.printf("You have selected %d/10. Keep selecting or press 0 to finish: ", initialCheeses);
+                    int choice = getInput();
+                    if (choice == 0) break;
+
+                    if (choice >= 1 && choice <= cheeses.length) {
+                        String selected = cheeses[choice - 1];
+                        sandwich.addTopping(new Cheese(selected, size));
+                        initialCheeses.put(selected, initialCheeses.getOrDefault(selected, 0) + 1);
+                        System.out.println(selected + " added.");
+
+                    } else {
+                        System.out.println("ERR can't let you do that! Enter 1 to " + cheeses.length + " or 0 to stop.");
+                    }
+                }
+
+                if (!initialCheeses.isEmpty()) {
+                    System.out.println("\nYou have selected:");
+                    for (Map.Entry<String, Integer> entry : initialCheeses.entrySet()) {
+                        System.out.printf(" - %s x%d\n", entry.getKey(), entry.getValue());
+                    }
+                }
+
+                System.out.print("\nExtra cheese? (Remember it costs more!)\nY/N: ");
+                if (getStringInput().equalsIgnoreCase("Y")) {
+                    Map<String, Integer> extraCheese = new HashMap<>();
+
+                    System.out.println("\nChoose the extra cheese you want\nAgain for legal reasons I have to tell you only up to 2 per type\nPress 0 when satisfied: ");
+                    for (int i = 0; i < cheeses.length; i++) {
+                        System.out.printf("%d. %s\n", i + 1, cheeses[i]);
+                    }
+
+                    while (true) {
+                        System.out.print("Extra cheese selection (0 to stop): ");
+                        int choice = getInput();
+                        if (choice == 0) break;
+
+                        if (choice >= 1 && choice <= cheeses.length) {
+                            String selected = cheeses[choice - 1];
+                            int currentCount = extraCheese.getOrDefault(selected, 0);
+
+                            if (currentCount >= 2) {
+                                System.out.println("Hold your greedy paws, remember only 2 of " + selected + " allowed.");
+                                continue;
+                            }
+
+                            sandwich.addTopping(new Cheese(selected, size));
+                            extraCheese.put(selected, currentCount + 1);
+                            System.out.println("Extra " + selected + " added.");
+                        } else {
+                            System.out.println("Must have been an miss input! ");
+                        }
+                    }
+
+                    if (!extraCheese.isEmpty()) {
+                        System.out.printf("\nYou added extra:");
+                        for (Map.Entry<String, Integer> entry : extraCheese.entrySet()) {
+                            System.out.printf(" - %s x%d (extra)\n", entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+
+            System.out.println("\n");
 
             System.out.println("\n--- The Free Stuff (Where you should be looking)");
             System.out.println("Press 'x' when you're done being so picky");
