@@ -1,0 +1,28 @@
+------- Order Receipt -------
+4" White (Toasted)
+  - Steak
+ ($1.00)
+  - Steak
+ ($1.00)
+  - Ham
+ ($1.00)
+  - Salami
+ ($1.00)
+  - Roast Beef
+ ($1.00)
+  - Chicken
+ ($1.00)
+  - Steak
+ ($1.00)
+  - Steak
+ ($1.00)
+  - Ham
+ ($1.00)
+  - Steak
+ ($1.00)
+  - Ham
+ ($1.00)
+ Sandwich Total: $16.50
+
+
+Total: $16.50

@@ -45,7 +45,9 @@ public class Order {
         StringBuilder receipt = new StringBuilder();
         receipt.append("------- Order Receipt -------\n");
 
+        int sandwichCount = 1;
         for (Sandwich sandwich : sandwiches) {
+            receipt.append("Sandwich #").append(sandwichCount++).append(":\n");
             receipt.append(sandwich.getReceiptLine()).append("\n");
         }
 

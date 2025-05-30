@@ -1,0 +1,30 @@
+------- Order Receipt -------
+8" White (Toasted)
+  - American
+  - Onion
+  - Cheddar
+  - Provolone
+  - Steak x2
+  - Bacon
+  - Tomato
+  - Mayo
+  - Lettuce
+  - Oil
+  - Salami
+  - Ham x2
+  - Roast Beef
+  - Chicken
+  - Mustard
+ * Extra meats:
+    - Salami x1
+    - Ham x1
+    - Steak x2
+    - Roast Beef x1
+ * Extra Cheeses:
+    - Swiss x1
+ Sandwich Total: $16.10
+
+Drink: small Sprite - $1.50
+Chips: Cheetos - $1.50
+
+Total: $19.10

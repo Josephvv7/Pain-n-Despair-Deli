@@ -1,0 +1,43 @@
+------- Order Receipt -------
+Sandwich #1:
+4" Rye (Toasted)
+  - American
+  - Onion
+  - Cheddar
+  - Provolone
+  - Steak
+  - Tomato
+  - Vinegar
+  - Mayo
+  - Lettuce
+  - Oil
+  - Salami x2
+  - Ham x2
+  - Roast Beef
+  - Chicken
+  - Peppers
+  - Mustard
+  - Pickles
+ * Extra meats:
+    - Salami x1
+    - Ham x1
+    - Steak x2
+ * Extra Cheeses:
+    - Swiss x1
+ Sandwich Total: $9.80
+
+Sandwich #2:
+8" White
+  - Lettuce
+  - Oil
+  - Onion
+  - Steak
+  - Peppers
+  - Swiss
+  - Tomato
+ Sandwich Total: $10.50
+
+Drink: small Sprite - $1.50
+Chips: Lays - $1.50
+
+Total: $23.30

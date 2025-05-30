@@ -33,4 +33,5 @@ public class Drinks {
     public String getReceiptLine() {
         return String.format("Drink: %s %s - $%.2f", size, flavor, getPrice());
     }
+
 }

@@ -7,9 +7,11 @@ import OrderClass.Sandwich.Sandwich;
 import OrderClass.Sandwich.Toppings.Cheese;
 import OrderClass.Sandwich.Toppings.Meats;
 import OrderClass.Sandwich.Toppings.RegularTopping;
+import OrderClass.Sandwich.Toppings.Sauces;
 import OrderFileManager.OrderFileManager;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class OrderMenu {
     public Order currentOrder;
@@ -76,7 +78,7 @@ public class OrderMenu {
             }
         }
 
-        public void buildSandwich() {
+        private void buildSandwich() {
             System.out.println("\n===== Build Your Sandwich =====");
 
             System.out.println("Bread Options:");
@@ -93,7 +95,7 @@ public class OrderMenu {
             };
 
             System.out.print("\nSize Selection (we have 4, 8, or 12 inches): ");
-            int size = getInput();
+            int size = Integer.parseInt(scanner.nextLine());
 
             Sandwich sandwich = new Sandwich(size, bread);
             System.out.print("\nToast the sandwich? (Y/N?): ");
@@ -107,19 +109,26 @@ public class OrderMenu {
             System.out.println("Yay...sandwich added to order...(You get to pay soon congrats!)");
     }
 
-        public void pickToppings (Sandwich sandwich, int size) {
+        private void pickToppings (Sandwich sandwich, int size) {
             System.out.println("\n--- Premium Toppings ---");
             System.out.print("Add meat? (Y/N): ");
-            if (getStringInput().equalsIgnoreCase("Y")) {
 
+            if (getStringInput().equalsIgnoreCase("Y")) {
+                sandwich.setHasMeat(true);
                 String[] meats = Meats.getAvailableMeats();
+
                 Map<String, Integer> initialMeats = new HashMap<>();
                 int meatAmount = 0;
 
                 System.out.println("\nChoose what meat to add...You get to go crazy! (Up to 10, I am not made of money!)\n Select 0 to stop: ");
-                for (int i = 0; i < meats.length; i++) {
+                //Previous for-loop
+                /*for (int i = 0; i < meats.length; i++) {
                     System.out.printf("%d. %s\n", i + 1, meats[i]);
-                }
+                    }*/
+
+                //Implementing Streams
+                IntStream.range(0, meats.length)
+                        .forEach(i -> System.out.printf("%d. %s\n", i + 1, meats[i]));
 
                 while (meatAmount < 10) {
                     System.out.printf("You have selected %d/10. Keep selecting or press 0 to finish: ", meatAmount);
@@ -128,11 +137,11 @@ public class OrderMenu {
                     if (choice == 0) break;
 
                     if (choice >= 1 && choice <= meats.length) {
-                    String selected = meats[choice - 1];
-                    sandwich.addTopping(new Meats(selected, size));
-                    initialMeats.put(selected, initialMeats.getOrDefault(selected, 0) + 1);
-                    meatAmount++;
-                    System.out.println(selected + " added.");
+                        String selected = meats[choice - 1];
+                        sandwich.addTopping(new Meats(selected, size));
+                        initialMeats.put(selected, initialMeats.getOrDefault(selected, 0) + 1);
+                        meatAmount++;
+                        System.out.println(selected + " added.");
 
                     } else {
                         System.out.println("ERR can't let you do that! Enter 1 to " + meats.length + " or 0 to stop.");
@@ -150,57 +159,62 @@ public class OrderMenu {
                 if (getStringInput().equalsIgnoreCase("Y")) {
                     Map<String, Integer> meatAmountExtra = new HashMap<>();
 
+                    System.out.println("\nChoose the extra meat you want (Like you need more...)\nFor legal reasons I have to tell you only up to 2 per type, although I would not try to stop you personally.\nPress 0 when satisfied: ");
+                    for (int i = 0; i < meats.length; i++) {
+                        System.out.printf("%d. %s\n", i + 1, meats[i]);
+                    }
 
-                        System.out.println("\nChoose the extra meat you want (Like you need more...)\nFor legal reasons I have to tell you only up to 2 per type, although I would not try to stop you personally.\nPress 0 when satisfied: ");
-                        for (int i = 0; i < meats.length; i++) {
-                            System.out.printf("%d. %s\n", i + 1, meats[i]);
-                        }
+                    while (true) {
+                        System.out.print("Extra meat selection (0 to stop): ");
+                        int choice = getInput();
+                        if (choice == 0) break;
 
-                        while (true) {
-                            System.out.print("Extra meat selection (0 to stop): ");
-                            int choice = getInput();
-                            if (choice == 0) break;
+                        if (choice >= 1 && choice <= meats.length) {
+                            String selected = meats[choice - 1];
+                            int currentCount = meatAmountExtra.getOrDefault(selected, 0);
 
-                            if (choice >= 1 && choice <= meats.length) {
-                                String selected = meats[choice - 1];
-                                int currentCount = meatAmountExtra.getOrDefault(selected, 0);
-
-                                if (currentCount >= 2) {
-                                    System.out.println("You already chose 2 of " + selected + "\nThis is the greed they spoke about in the Bible!");
-                                    continue;
+                            if (currentCount >= 2) {
+                                System.out.println("You already chose 2 of " + selected + "\nThis is the greed they spoke about in the Bible!");
+                                continue;
                             }
 
-                            sandwich.addTopping(new Meats(selected, size));
+                            sandwich.addExtraMeat(selected, size);
                             meatAmountExtra.put(selected, currentCount + 1);
                             System.out.println("Extra " + selected + " added.");
                         } else {
                             System.out.println("And I am back to saying you did something wrong, surprised? No.");
                         }
                     }
-                        if (!meatAmountExtra.isEmpty()) {
-                            System.out.printf("\nYou added extra:");
-                            for (Map.Entry<String, Integer> entry : meatAmountExtra.entrySet()) {
-                                System.out.printf(" - %s x%d (extra)\n", entry.getKey(), entry.getValue());
-                            }
+                    if (!meatAmountExtra.isEmpty()) {
+                        System.out.print("\nYou added extra:");
+                        for (Map.Entry<String, Integer> entry : meatAmountExtra.entrySet()) {
+                            System.out.printf("\n - %s x%d (extra)\n", entry.getKey(), entry.getValue());
                         }
+                    }
                 }
             }
 
             System.out.println("\n--- Cheese Selection ---");
             System.out.print("Add cheese? (Y/N): ");
             if (getStringInput().equalsIgnoreCase("Y")) {
-
+                sandwich.setHasCheese(true);
                 String[] cheeses = Cheese.getAvailableCheese();
                 Map<String, Integer> initialCheeses = new HashMap<>();
 
                 System.out.println("\nChoose what cheese to add...You get to go crazy! (Up to 10, I am not made of money!)\n Select 0 to stop: ");
-                for (int i = 0; i < cheeses.length; i++) {
+                //Previous for-loop before using Streams
+                /*for (int i = 0; i < cheeses.length; i++) {
                     System.out.printf("%d. %s\n", i + 1, cheeses[i]);
-                }
+                }*/
+
+                //Using Streams for Cheese
+                IntStream.range(0, cheeses.length)
+                        .forEach(i -> System.out.printf("%d. %s\n", i + 1, cheeses[i]));
 
                 while (true) {
-                    System.out.printf("You have selected %d/10. Keep selecting or press 0 to finish: ", initialCheeses);
+                    System.out.print("Select Cheese or press 0 to finish: ");
                     int choice = getInput();
+
                     if (choice == 0) break;
 
                     if (choice >= 1 && choice <= cheeses.length) {
@@ -244,7 +258,7 @@ public class OrderMenu {
                                 continue;
                             }
 
-                            sandwich.addTopping(new Cheese(selected, size));
+                            sandwich.addExtraCheese(selected, size);
                             extraCheese.put(selected, currentCount + 1);
                             System.out.println("Extra " + selected + " added.");
                         } else {
@@ -253,9 +267,9 @@ public class OrderMenu {
                     }
 
                     if (!extraCheese.isEmpty()) {
-                        System.out.printf("\nYou added extra:");
+                        System.out.println("\nYou added extra:");
                         for (Map.Entry<String, Integer> entry : extraCheese.entrySet()) {
-                            System.out.printf(" - %s x%d (extra)\n", entry.getKey(), entry.getValue());
+                            System.out.printf("\n - %s x%d (extra)\n", entry.getKey(), entry.getValue());
                         }
                     }
                 }
@@ -263,39 +277,100 @@ public class OrderMenu {
 
             System.out.println("\n");
 
-            System.out.println("\n--- The Free Stuff (Where you should be looking)");
-            System.out.println("Press 'x' when you're done being so picky");
+            String[] regularToppings = RegularTopping.getAvailableToppings();
+
+            System.out.println("\n---- The Free Stuff (Where you should be looking) ----");
+            for (int i = 0; i < regularToppings.length; i++) {
+                System.out.printf("%d. %s\n", i + 1, regularToppings[i]);
+            }
+            System.out.println("Press 0 when you're done being so picky");
 
             while (true) {
-                System.out.println("Add toppings/sauces: ");
-                String topping = getStringInput();
-                if (topping.equalsIgnoreCase("x")) break;
-                sandwich.addTopping(new RegularTopping(topping));
+                System.out.println("Add toppings: ");
+                int choice = getInput();
+
+                if (choice == 0) break;
+
+                if (choice >= 1 && choice <= regularToppings.length) {
+                    String selected = regularToppings[choice - 1];
+                    sandwich.addTopping(new RegularTopping(selected));
+                    System.out.println(selected + " added.");
+                } else {
+                    System.out.println("Bro...Can we not count? Select 1 to " + regularToppings.length + ", or 0 to stop.");
+                }
+            }
+
+            String[] sauceOptions = Sauces.getAvailableSauces();
+
+            System.out.println("\n---- Sauces ----");
+            for (int i = 0; i < sauceOptions.length; i++) {
+                System.out.printf("%d. %s\n", i + 1, sauceOptions[i]);
+            }
+            System.out.println("Press 0 when you are done.");
+
+            while (true) {
+                System.out.println("Select Sauces: ");
+                int choice = getInput();
+
+                if (choice == 0) break;
+
+                if (choice >= 1 && choice <= sauceOptions.length) {
+                    String selected = sauceOptions[choice - 1];
+                    sandwich.addTopping(new Sauces(selected));
+                    System.out.println(selected + " added.");
+                } else {
+                    System.out.println("Bro...Can we not count? Select 1 to " + sauceOptions.length + ", or 0 to stop.");
+                }
             }
         }
 
-        public void addDrink() {
+        private void addDrink() {
             System.out.println("\n===== Add Drink =====");
             System.out.print("Size (small, medium, large): ");
             String size = getStringInput();
 
             System.out.print("Flavor (We do not have many or all day): ");
-            String flavor = getStringInput();
+            System.out.println("\n1: Water \n2: Coke \n3: Pepsi \n4: Sprite");
+
+            int choice = getInput();
+            String flavor = switch (choice) {
+                case 1 -> "Water";
+                case 2 -> "Coke";
+                case 3 -> "Pepsi";
+                case 4 -> "Sprite";
+                default -> {
+                    System.out.println("Invalid choice! Choosing my favorite for you!");
+                    yield "Sprite";
+                }
+            };
 
             currentOrder.addDrink(new Drinks(size, flavor));
             System.out.println("Drink added yay! More money for me and more sugar for you!");
-        }
 
-        public void addChips() {
+    }
+
+        private void addChips() {
             System.out.println("\n===== Add Chips =====");
-            System.out.print("Chip brand (All of them are stale): ");
-            String brand = getStringInput();
+            System.out.print("Chip brands (All of them are stale by the way!): ");
+            System.out.println("\n1: Lays \n2: Ruffles \n3: Cheetos");
+
+            int choice = getInput();
+            String brand = switch (choice) {
+                case 1 -> "Lays";
+                case 2 -> "Ruffles";
+                case 3 -> "Cheetos";
+                default -> {
+                    System.out.println("Invalid choice! We are going with the most bland brand1 HA!: ");
+                    yield "Lays";
+                }
+            };
 
             currentOrder.addChips(new Chips(brand));
-            System.out.println("Chips added...");
-        }
+            System.out.println(  "Bag of " + brand  + " added. Enjoy the disappointment");
 
-        public boolean checkout () {
+    }
+
+        private boolean checkout () {
             System.out.println("\n===== Checking Out Finally! =====");
             System.out.println(currentOrder.generateReceipt());
 

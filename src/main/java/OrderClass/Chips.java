@@ -18,4 +18,5 @@ public class Chips {
     public String getReceiptLine() {
         return String.format("Chips: %s - $%.2f", brand, getPrice());
     }
+
 }

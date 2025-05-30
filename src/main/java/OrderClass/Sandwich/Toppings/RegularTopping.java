@@ -6,11 +6,6 @@ public class RegularTopping extends ToppingsA {
     }
 
     @Override
-    public double getPrice() {
-        return 0.0;
-    }
-
-    @Override
     public String getType() {
         return "Regular";
     }

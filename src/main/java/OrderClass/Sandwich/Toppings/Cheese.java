@@ -9,13 +9,6 @@ public class Cheese extends ToppingsA {
     }
 
     @Override
-    public double getPrice() {
-        if (size == 4) return 0.75;
-        if (size == 8) return 1.50;
-        return 2.25;
-    }
-
-    @Override
     public String getType() {
         return "Premium";
     }

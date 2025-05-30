@@ -11,11 +11,6 @@ public abstract class ToppingsA {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public abstract double getPrice();
 
     public abstract String getType();
 

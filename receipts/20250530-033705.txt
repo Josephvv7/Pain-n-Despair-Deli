@@ -1,0 +1,11 @@
+------- Order Receipt -------
+8" White (Toasted)
+  - Salami x2
+  - Ham x3
+  - Steak x4
+  - Chicken
+  - Bacon
+ Sandwich Total: $9.00
+
+
+Total: $9.00
